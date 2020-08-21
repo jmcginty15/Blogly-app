@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if new %}
+New User
+{% else %}
+Edit {{ user.get_full_name() }}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if new %}
+<h1>Add a new User:</h1>
+{% else %}
+<h1>Edit {{ user.get_full_name() }}:</h1>
+{% endif %}
+<div>
+    {% if new %}
+    <form action='/users/new' method='POST'>
+        <p>
+            <label for="first-name">First name: </label>
+            <input name="first-name" placeholder="First name" required>
+        </p>
+        <p>
+            <label for="last-name">Last name: </label>
+            <input name="last-name" placeholder="Last name" required>
+        </p>
+        <p>
+            <label for="img-url">Profile picture URL: </label>
+            <input name="img-url" placeholder="Profile picture URL">
+        </p>
+        <button type="submit">Submit</button>
+    </form>
+    {% else %}
+    <form action='/users/{{ user.id }}/edit' method='POST'>
+        <p>
+            <label for="first-name">First name: </label>
+            <input name="first-name" value="{{ user.first_name }}" required>
+        </p>
+        <p>
+            <label for="last-name">Last name: </label>
+            <input name="last-name" value="{{ user.last_name }}" required>
+        </p>
+        <p>
+            <label for="img-url">Profile picture URL: </label>
+            <input name="img-url" value="{{ user.image_url }}" required>
+        </p>
+        <button type="submit">Submit</button>
+    </form>
+    {% endif %}
+    <br>
+    <form action="/users">
+        <button>Cancel</button>
+    </form>
+</div>
+{% endblock %}

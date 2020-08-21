@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Users{% endblock %}
+
+{% block content %}
+<h1>Users</h1>
+{% for msg in get_flashed_messages() %}
+<p>{{ msg }}</p>
+{% endfor %}
+<ul>
+    {% if users %}
+    {% for user in users %}
+    <li><a href="/users/{{ user.id }}">{{ user.get_full_name() }}</a></li>
+    {% endfor %}
+    {% else %}
+    <h3>No users registered!</h3>
+    {% endif %}
+</ul>
+<form action="/users/new">
+<button type="submit">New user</button>
+</form>
+{% endblock %}
