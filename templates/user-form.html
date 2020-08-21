@@ -9,48 +9,57 @@ Edit {{ user.get_full_name() }}
 {% endblock %}
 
 {% block content %}
-{% if new %}
-<h1>Add a new User:</h1>
-{% else %}
-<h1>Edit {{ user.get_full_name() }}:</h1>
-{% endif %}
 <div>
-    {% if new %}
-    <form action='/users/new' method='POST'>
-        <p>
-            <label for="first-name">First name: </label>
-            <input name="first-name" placeholder="First name" required>
-        </p>
-        <p>
-            <label for="last-name">Last name: </label>
-            <input name="last-name" placeholder="Last name" required>
-        </p>
-        <p>
-            <label for="img-url">Profile picture URL: </label>
-            <input name="img-url" placeholder="Profile picture URL">
-        </p>
-        <button type="submit">Submit</button>
-    </form>
-    {% else %}
-    <form action='/users/{{ user.id }}/edit' method='POST'>
-        <p>
-            <label for="first-name">First name: </label>
-            <input name="first-name" value="{{ user.first_name }}" required>
-        </p>
-        <p>
-            <label for="last-name">Last name: </label>
-            <input name="last-name" value="{{ user.last_name }}" required>
-        </p>
-        <p>
-            <label for="img-url">Profile picture URL: </label>
-            <input name="img-url" value="{{ user.image_url }}" required>
-        </p>
-        <button type="submit">Submit</button>
-    </form>
-    {% endif %}
+    <div class="card" style="width: 600px;" id="form-container">
+        {% if new %}
+        <div class="card-body">
+            <h3 class="card-title">Add a new User:</h3>
+        </div>
+        <form action="/users/new" method="POST">
+            <div class="form-group">
+                <label for="first-name">First name</label>
+                <input class="form-control" name="first-name" placeholder="Enter first name" required>
+            </div>
+            <div class="form-group">
+                <label for="last-name">Last name</label>
+                <input class="form-control" name="last-name" placeholder="Enter last name" required>
+            </div>
+            <div class="form-group">
+                <label for="img-url">Profile picture URL</label>
+                <input class="form-control" name="img-url" placeholder="Enter URL for profile picture">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        <form action="/users" id="cancel-button">
+            <button class="btn btn-danger">Cancel</button>
+        </form>
+        {% else %}
+        <div class="card-body">
+            <h3 class="card-title">Edit {{ user.get_full_name() }}:</h3>
+        </div>
+        <form action="/users/{{ user.id }}/edit" method="POST">
+            <div class="form-group">
+                <label for="first-name">First name</label>
+                <input class="form-control" name="first-name" placeholder="Enter first name"
+                    value="{{ user.first_name }}" required>
+            </div>
+            <div class="form-group">
+                <label for="last-name">Last name</label>
+                <input class="form-control" name="last-name" placeholder="Enter last name" value="{{ user.last_name }}"
+                    required>
+            </div>
+            <div class="form-group">
+                <label for="img-url">Profile picture URL</label>
+                <input class="form-control" name="img-url" placeholder="Enter URL for profile picture"
+                    value="{{ user.image_url }}">
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+        <form action="/users/{{ user.id }}" id="cancel-button">
+            <button class="btn btn-danger">Cancel</button>
+        </form>
+        {% endif %}
+    </div>
     <br>
-    <form action="/users">
-        <button>Cancel</button>
-    </form>
 </div>
 {% endblock %}

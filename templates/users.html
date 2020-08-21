@@ -3,20 +3,28 @@
 {% block title %}Users{% endblock %}
 
 {% block content %}
-<h1>Users</h1>
-{% for msg in get_flashed_messages() %}
-<p>{{ msg }}</p>
-{% endfor %}
-<ul>
-    {% if users %}
-    {% for user in users %}
-    <li><a href="/users/{{ user.id }}">{{ user.get_full_name() }}</a></li>
-    {% endfor %}
+<div class="card" style="width: 600px;" id="list-container">
+    <div class="card-body">
+        <h3 class="card-title">Users</h3>
+        {% for msg in get_flashed_messages() %}
+        <div class="alert alert-success" role="alert">{{ msg }}</div>
+        {% endfor %}
+    </div>
+    {% if user_count %}
+    <div class="card-body">
+        <ul class="list-group">
+            {% for user in users %}
+            <li class="list-group-item"><a href="/users/{{ user.id }}">{{ user.get_full_name() }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
     {% else %}
-    <h3>No users registered!</h3>
+    <div class="card-body">
+        <h4 class="card-title">No users registered!</h4>
+    </div>
     {% endif %}
-</ul>
-<form action="/users/new">
-<button type="submit">New user</button>
-</form>
+    <div class="card-body">
+        <a href="/users/new" class="btn btn-primary">Add New User</a>
+    </div>
+</div>
 {% endblock %}

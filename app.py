@@ -24,13 +24,14 @@ def home():
 @app.route('/users')
 def users():
     """Displays all users currently in the database"""
-    users = User.query.all()
-    return render_template('users.html', users=users)
+    users = User.query.order_by('last_name', 'first_name')
+    user_count = users.count()
+    return render_template('users.html', users=users, user_count=user_count)
 
 @app.route('/users/new')
 def add_user():
     """Displays form to add new user"""
-    return render_template('user-form.html', new=True)
+    return render_template('user-form.html', new=True, user=None)
 
 @app.route('/users/new', methods=['POST'])
 def process_form():
@@ -75,4 +76,9 @@ def process_edit(user_id):
 @app.route('/users/<int:user_id>/delete', methods=['POST'])
 def delete_user(user_id):
     """Deletes a user by id"""
+    user = User.query.get(user_id)
+    username = user.get_full_name()
+    db.session.delete(user)
+    db.session.commit()
+    flash(f'{username} deleted!')
     return redirect('/users')
