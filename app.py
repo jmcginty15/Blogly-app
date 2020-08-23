@@ -18,9 +18,9 @@ db.create_all()
 
 @app.route('/')
 def home():
-    """Displays the home page"""
-    # Just redirects to users for now
-    return redirect('/users')
+    """Displays the home page with the 5 most recently updated posts"""
+    posts = Post.query.order_by(Post.updated_at.desc()).limit(5).all()
+    return render_template('home.html', posts=posts)
 
 @app.route('/users')
 def users():
@@ -111,8 +111,8 @@ def process_post_edit(post_id):
     flash(f'{post.title} updated!')
     return redirect(f'/posts/{post.id}')
 
-@app.route('/posts/<int:post_id>/delete', methods=['POST'])
-def delete_post(post_id):
+@app.route('/posts/<int:post_id>/delete/<page>', methods=['POST'])
+def delete_post(post_id, page):
     """Deletes a post by id"""
     post = Post.query.get(post_id)
     user = post.poster
@@ -120,7 +120,10 @@ def delete_post(post_id):
     db.session.delete(post)
     db.session.commit()
     flash(f'{title} deleted!')
-    return redirect(f'/users/{user.id}')
+    if page == 'home':
+        return redirect('/')
+    elif page == 'post':
+        return redirect(f'/users/{user.id}')
 
 @app.route('/users/<int:user_id>/posts/new')
 def add_post(user_id):

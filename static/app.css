@@ -30,3 +30,12 @@
 #post-container {
     margin: 10px;
 }
+
+#page-title, #all-users-btn {
+    margin: 10px;
+}
+
+#home-flash {
+    width: 600px;
+    margin: 10px;
+}

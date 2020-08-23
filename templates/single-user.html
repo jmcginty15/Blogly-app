@@ -20,8 +20,8 @@
                 <form action="/users/{{ user.id }}/delete" method="POST" class="card-form">
                     <button type="submit" class="btn btn-danger">Delete User</button>
                 </form>
-                <form action="/" class="card-form">
-                    <button type="submit" class="btn btn-success">Back to Home</button>
+                <form action="/users" class="card-form">
+                    <button type="submit" class="btn btn-success">Back to Users</button>
                 </form>
             </div>
             <div class="card-body" id="post-list">
@@ -30,7 +30,9 @@
                 <div class="card-body">
                     <ul class="list-group">
                         {% for post in posts %}
-                        <li class="list-group-item"><a href="/posts/{{ post.id }}">{{ post.title }}</a></li>
+                        <li class="list-group-item"><a href="/posts/{{ post.id }}">{{ post.title }}</a><br>
+                            <em>posted {{ post.format_date('created') }}</em><br>
+                            <em>last updated {{ post.format_date('updated') }}</em></li>
                         {% endfor %}
                     </ul>
                 </div>
