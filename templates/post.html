@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="card" style="width: 600px;" id="post-container">
+    <div class="card-body">
+        <h5 class="card-title">{{ post.title }}</h5>
+        {% for msg in get_flashed_messages() %}
+        <div class="alert alert-success" role="alert">{{ msg }}</div>
+        {% endfor %}
+        <h6 class="card-subtitle mb-2 text-muted">by {{ post.poster.get_full_name() }}</h6>
+        <h6 class="card-subtitle mb-2 text-muted"><em>posted {{ post.created_at }}</em></h6>
+        <h6 class="card-subtitle mb-2 text-muted"><em>last updated {{ post.updated_at }}</em></h6>
+        <p class="card-text">{{ post.content }}</p>
+    </div>
+    <div class="card-body">
+        <form action="/posts/{{ post.id }}/edit" class="card-form">
+            <button type="submit" class="btn btn-primary">Edit Post</button>
+        </form>
+        <form action="/posts/{{ post.id }}/delete" method="POST" class="card-form">
+            <button type="submit" class="btn btn-danger">Delete Post</button>
+        </form>
+        <form action="/users/{{ post.poster.id }}" class="card-form">
+            <button type="submit" class="btn btn-success">Back to {{ post.poster.get_full_name() }}</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

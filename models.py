@@ -27,3 +27,20 @@ class User(db.Model):
     def get_full_name(self):
         """Return user's full name"""
         return f'{self.first_name} {self.last_name}'
+
+class Post(db.Model):
+    """Post"""
+
+    __tablename__ = 'Posts'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(50), nullable=False)
+    content = db.Column(db.String, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False)
+    updated_at = db.Column(db.DateTime, nullable=False)
+    poster_id = db.Column(db.Integer, db.ForeignKey('Users.id'))
+    poster = db.relationship('User', backref='posts')
+
+    def __repr__(self):
+        """Show info about post."""
+        return f'<Post id: {self.id}, title: {self.title}, content: {self.content}, created_at: {self.created_at}, poster_id: {self.poster_id}>'

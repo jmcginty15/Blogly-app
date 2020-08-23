@@ -18,3 +18,15 @@
 #cancel-button {
     margin-top: 10px;
 }
+
+#post-list {
+    padding: 0;
+}
+
+#posts-title {
+    padding-left: 20px;
+}
+
+#post-container {
+    margin: 10px;
+}

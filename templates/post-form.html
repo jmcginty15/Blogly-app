@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if new %}
+New Post
+{% else %}
+Edit {{ post.title }}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div>
+    <div class="card" style="width: 600px;" id="form-container">
+        {% if new %}
+        <div class="card-body">
+            <h3 class="card-title">Add a new Post:</h3>
+        </div>
+        <form action="/users/{{ user.id }}/posts/new" method="POST">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input class="form-control" name="title" placeholder="Enter post title" required>
+            </div>
+            <div class="form-group">
+                <label for="content">Content</label>
+                <textarea class="form-control" name="content" placeholder="Enter post content" rows="10" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        <form action="/users/{{ user.id }}" id="cancel-button">
+            <button class="btn btn-danger">Cancel</button>
+        </form>
+        {% else %}
+        <div class="card-body">
+            <h3 class="card-title">Edit {{ post.title }}:</h3>
+        </div>
+        <form action="/posts/{{ post.id }}/edit" method="POST">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input class="form-control" name="title" placeholder="Enter post title" value="{{ post.title }}"
+                    required>
+            </div>
+            <div class="form-group">
+                <label for="content">Content</label>
+                <textarea class="form-control" name="content" placeholder="Enter post content" rows="10"
+                    required>{{ post.content }}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+        <form action="/posts/{{ post.id }}" id="cancel-button">
+            <button class="btn btn-danger">Cancel</button>
+        </form>
+        {% endif %}
+    </div>
+    <br>
+</div>
+
+{% endblock %}

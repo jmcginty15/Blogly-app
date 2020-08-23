@@ -11,6 +11,9 @@
         <div class="col-md-8">
             <div class="card-body">
                 <h5 class="card-title">{{ user.get_full_name() }}</h5>
+                {% for msg in get_flashed_messages() %}
+                <div class="alert alert-success" role="alert">{{ msg }}</div>
+                {% endfor %}
                 <form action="/users/{{ user.id }}/edit" class="card-form">
                     <button type="submit" class="btn btn-primary">Edit User</button>
                 </form>
@@ -20,6 +23,25 @@
                 <form action="/" class="card-form">
                     <button type="submit" class="btn btn-success">Back to Home</button>
                 </form>
+            </div>
+            <div class="card-body" id="post-list">
+                <h5 class="card-title" id="posts-title">Posts</h5>
+                {% if post_count %}
+                <div class="card-body">
+                    <ul class="list-group">
+                        {% for post in posts %}
+                        <li class="list-group-item"><a href="/posts/{{ post.id }}">{{ post.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% else %}
+                <div class="card-body">
+                    <h6 class="card-title">No posts yet!</h6>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <a href="/users/{{ user.id }}/posts/new" class="btn btn-primary">Add Post</a>
+                </div>
             </div>
         </div>
     </div>

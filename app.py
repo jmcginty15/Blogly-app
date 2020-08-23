@@ -2,7 +2,8 @@
 
 from flask import Flask, request, render_template, redirect, flash
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User
+from models import db, connect_db, User, Post
+from datetime import datetime, timezone
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yeet'
@@ -50,7 +51,9 @@ def process_form():
 def display_user(user_id):
     """Displays details for a single user"""
     user = User.query.get(user_id)
-    return render_template('single-user.html', user=user)
+    posts = Post.query.filter_by(poster_id=user_id)
+    post_count = posts.count()
+    return render_template('single-user.html', user=user, posts=posts, post_count=post_count)
 
 @app.route('/users/<int:user_id>/edit')
 def edit_user(user_id):
@@ -82,3 +85,56 @@ def delete_user(user_id):
     db.session.commit()
     flash(f'{username} deleted!')
     return redirect('/users')
+
+@app.route('/posts/<int:post_id>')
+def show_post(post_id):
+    """Shows a single post by id"""
+    post = Post.query.get(post_id)
+    return render_template('post.html', post=post)
+
+@app.route('/posts/<int:post_id>/edit')
+def edit_post_form(post_id):
+    """Displays a form to edit a post"""
+    post = Post.query.get(post_id)
+    user = post.poster
+    return render_template('post-form.html', new=False, post=post, user=user)
+
+@app.route('/posts/<int:post_id>/edit', methods=['POST'])
+def process_post_edit(post_id):
+    """Processes input for editing a post"""
+    form_input = request.form
+    post = Post.query.get(post_id)
+    post.title = form_input['title']
+    post.content = form_input['content']
+    post.updated_at = datetime.now(timezone.utc)
+    db.session.commit()
+    flash(f'{post.title} updated!')
+    return redirect(f'/posts/{post.id}')
+
+@app.route('/posts/<int:post_id>/delete', methods=['POST'])
+def delete_post(post_id):
+    """Deletes a post by id"""
+    post = Post.query.get(post_id)
+    user = post.poster
+    title = post.title
+    db.session.delete(post)
+    db.session.commit()
+    flash(f'{title} deleted!')
+    return redirect(f'/users/{user.id}')
+
+@app.route('/users/<int:user_id>/posts/new')
+def add_post(user_id):
+    """Displays form for adding a new post"""
+    user = User.query.get(user_id)
+    return render_template('post-form.html', new=True, post=None, user=user)
+
+@app.route('/users/<int:user_id>/posts/new', methods=['POST'])
+def process_new_post(user_id):
+    """Processes form input for new post"""
+    form_input = request.form
+    user = User.query.get(user_id)
+    new_post = Post(title=form_input['title'], content=form_input['content'], created_at=datetime.now(timezone.utc), updated_at=datetime.now(timezone.utc), poster_id=user_id)
+    db.session.add(new_post)
+    db.session.commit()
+    flash(f'{new_post.title} added!')
+    return redirect(f'/users/{user_id}')
