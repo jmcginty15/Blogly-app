@@ -8,6 +8,7 @@
 {% for msg in get_flashed_messages() %}
 <div class="alert alert-success" role="alert" id="home-flash">{{ msg }}</div>
 {% endfor %}
+{% if posts %}
 {% for post in posts %}
 <div class="card" style="width: 600px;" id="post-container">
     <div class="card-body">
@@ -28,4 +29,7 @@
     </div>
 </div>
 {% endfor %}
+{% else %}
+<h3 class="card-title" id="page-subtitle">No posts yet!</h3>
+{% endif %}
 {% endblock %}
