@@ -15,7 +15,7 @@
         <ul class="list-group">
             {% for post in tag.posts %}
             <li class="list-group-item"><a href="/posts/{{ post.id }}">{{ post.title }}</a><br>
-            <em>by {{ post.poster.get_full_name() }}</em></li>
+            <em>by <a href="/users/{{ post.poster.id }}">{{ post.poster.get_full_name() }}</a></em></li>
             {% endfor %}
         </ul>
     </div>

@@ -27,9 +27,9 @@ Edit {{ tag.name }}
         </form>
         {% else %}
         <div class="card-body">
-            <h3 class="card-title">Edit {{ tag.name }}:</h3>
+            <h3 class="card-title">Edit <span class="badge badge-primary">{{ tag.name }}</span>:</h3>
         </div>
-        <form action="/users/{{ user.id }}/edit" method="POST">
+        <form action="/tags/{{ tag.id }}/edit" method="POST">
             <div class="form-group">
                 <label for="name">Name</label>
                 <input class="form-control" name="name" placeholder="Enter a tag name"

@@ -1,6 +1,6 @@
 """Blogly application."""
 
-from flask import Flask, request, render_template, redirect, flash
+from flask import Flask, request, render_template, redirect, flash, Markup
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, User, Post, Tag, PostTag
 from datetime import datetime, timezone
@@ -145,7 +145,7 @@ def process_new_post(user_id):
 @app.route('/tags')
 def tags():
     """Shows a list of all existing tags"""
-    tags = Tag.query.all()
+    tags = Tag.query.order_by('name').all()
     tag_count = len(tags)
     return render_template('tags.html', tags=tags, tag_count=tag_count)
 
@@ -160,3 +160,42 @@ def tag(tag_id):
 def add_tag():
     """Displays form to add a new tag"""
     return render_template('tag-form.html', new=True, tag=None)
+
+@app.route('/tags/new', methods=['POST'])
+def process_new_tag():
+    """Processes form input for new tag"""
+    tag_name = request.form['name']
+    new_tag = Tag(name=tag_name)
+    db.session.add(new_tag)
+    db.session.commit()
+    flash_msg = Markup(f'<span class="badge badge-primary">{tag_name}</span> added!')
+    flash(flash_msg)
+    return redirect('/tags')
+
+@app.route('/tags/<int:tag_id>/delete', methods=['POST'])
+def delete_tag(tag_id):
+    """Deletes a tag by id"""
+    tag = Tag.query.get(tag_id)
+    tag_name = tag.name
+    db.session.delete(tag)
+    db.session.commit()
+    flash_msg = Markup(f'<span class="badge badge-primary">{tag_name}</span> deleted!')
+    flash(flash_msg)
+    return redirect('/tags')
+
+@app.route('/tags/<int:tag_id>/edit')
+def edit_tag(tag_id):
+    """Displays a form for editing a tag name"""
+    tag = Tag.query.get(tag_id)
+    return render_template('tag-form.html', new=False, tag=tag)
+
+@app.route('/tags/<int:tag_id>/edit', methods=['POST'])
+def process_tag_edit(tag_id):
+    """Process form input for editing a tag name"""
+    tag_name = request.form['name']
+    tag = Tag.query.get(tag_id)
+    tag.name = tag_name
+    db.session.commit()
+    flash_msg = Markup(f'<span class="badge badge-primary">{tag_name}</span> updated!')
+    flash(flash_msg)
+    return redirect('/tags')

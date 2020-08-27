@@ -31,6 +31,8 @@
                     <ul class="list-group">
                         {% for post in posts %}
                         <li class="list-group-item"><a href="/posts/{{ post.id }}">{{ post.title }}</a><br>
+                            <b>Tags:</b>{% for tag in post.tags %}&nbsp;<span class="badge badge-primary">
+                                <a href="/tags/{{ tag.id }}" class="tag-link">{{ tag.name }}</a></span>{% endfor %}<br>
                             <em>posted {{ post.format_date('created') }}</em><br>
                             <em>last updated {{ post.format_date('updated') }}</em></li>
                         {% endfor %}

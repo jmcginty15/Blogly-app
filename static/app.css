@@ -39,3 +39,11 @@
     width: 600px;
     margin: 10px;
 }
+
+.tag-link {
+    color: white;
+}
+
+.tag-link:hover {
+    color: black;
+}
