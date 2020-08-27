@@ -2,7 +2,7 @@
 
 from flask import Flask, request, render_template, redirect, flash
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User, Post
+from models import db, connect_db, User, Post, Tag, PostTag
 from datetime import datetime, timezone
 
 app = Flask(__name__)
@@ -141,3 +141,22 @@ def process_new_post(user_id):
     db.session.commit()
     flash(f'{new_post.title} added!')
     return redirect(f'/users/{user_id}')
+
+@app.route('/tags')
+def tags():
+    """Shows a list of all existing tags"""
+    tags = Tag.query.all()
+    tag_count = len(tags)
+    return render_template('tags.html', tags=tags, tag_count=tag_count)
+
+@app.route('/tags/<int:tag_id>')
+def tag(tag_id):
+    """Shows details for a single tag"""
+    tag = Tag.query.get(tag_id)
+    post_count = len(tag.posts)
+    return render_template('single-tag.html', tag=tag, post_count=post_count)
+
+@app.route('/tags/new')
+def add_tag():
+    """Displays form to add a new tag"""
+    return render_template('tag-form.html', new=True, tag=None)

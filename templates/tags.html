@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}All Tags{% endblock %}
+
+{% block content %}
+<div class="card" style="width: 600px;" id="list-container">
+    <div class="card-body">
+        <h3 class="card-title">Tags</h3>
+        {% for msg in get_flashed_messages() %}
+        <div class="alert alert-success" role="alert">{{ msg }}</div>
+        {% endfor %}
+    </div>
+    {% if tag_count %}
+    <div class="card-body">
+        <ul class="list-group">
+            {% for tag in tags %}
+            <li class="list-group-item"><a href="/tags/{{ tag.id }}">{{ tag.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% else %}
+    <div class="card-body">
+        <h4 class="card-title">No tags yet!</h4>
+    </div>
+    {% endif %}
+    <div class="card-body">
+        <a href="/tags/new" class="btn btn-primary">Add New Tag</a>
+        <a href="/" class="btn btn-secondary">Back to Home</a>
+    </div>
+</div>
+{% endblock %}

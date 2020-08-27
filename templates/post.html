@@ -13,6 +13,8 @@
         <h6 class="card-subtitle mb-2 text-muted"><em>posted {{ post.format_date('created') }}</em></h6>
         <h6 class="card-subtitle mb-2 text-muted"><em>last updated {{ post.format_date('updated') }}</em></h6>
         <p class="card-text">{{ post.content }}</p>
+        <b>Tags:</b>{% for tag in post.tags %}&nbsp;<span class="badge badge-primary">{{ tag.name }}</span>{% endfor %}
+        <span class="badge badge-secondary">add new</span>
     </div>
     <div class="card-body">
         <form action="/posts/{{ post.id }}/edit" class="card-form">

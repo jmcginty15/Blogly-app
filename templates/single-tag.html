@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ tag.name }}{% endblock %}
+
+{% block content %}
+<div class="card" style="width: 600px;" id="list-container">
+    <div class="card-body">
+        <h3 class="card-title"><span class="badge badge-primary">{{ tag.name }}</span> Posts</h3>
+        {% for msg in get_flashed_messages() %}
+        <div class="alert alert-success" role="alert">{{ msg }}</div>
+        {% endfor %}
+    </div>
+    {% if post_count %}
+    <div class="card-body">
+        <ul class="list-group">
+            {% for post in tag.posts %}
+            <li class="list-group-item"><a href="/posts/{{ post.id }}">{{ post.title }}</a><br>
+            <em>by {{ post.poster.get_full_name() }}</em></li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% else %}
+    <div class="card-body">
+        <h4 class="card-title">No posts yet!</h4>
+    </div>
+    {% endif %}
+    <div class="card-body">
+        <form action="/tags/{{ tag.id }}/edit" class="card-form">
+            <button type="submit" class="btn btn-primary">Edit Tag</button>
+        </form>
+        <form action="/tags/{{ tag.id }}/delete" method="POST" class="card-form">
+            <button type="submit" class="btn btn-danger">Delete Tag</button>
+        </form>
+        <form action="/tags" class="card-form">
+            <button type="submit" class="btn btn-success">Back to Tags</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

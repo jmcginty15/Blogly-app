@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if new %}
+New Tag
+{% else %}
+Edit {{ tag.name }}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div>
+    <div class="card" style="width: 600px;" id="form-container">
+        {% if new %}
+        <div class="card-body">
+            <h3 class="card-title">Add a new Tag:</h3>
+        </div>
+        <form action="/tags/new" method="POST">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input class="form-control" name="name" placeholder="Enter a tag name" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        <form action="/tags" id="cancel-button">
+            <button class="btn btn-danger">Cancel</button>
+        </form>
+        {% else %}
+        <div class="card-body">
+            <h3 class="card-title">Edit {{ tag.name }}:</h3>
+        </div>
+        <form action="/users/{{ user.id }}/edit" method="POST">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input class="form-control" name="name" placeholder="Enter a tag name"
+                    value="{{ tag.name }}" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+        <form action="/tags/{{ tag.id }}" id="cancel-button">
+            <button class="btn btn-danger">Cancel</button>
+        </form>
+        {% endif %}
+    </div>
+    <br>
+</div>
+{% endblock %}

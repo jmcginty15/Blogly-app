@@ -1,6 +1,6 @@
 """Seed file to create sample data"""
 
-from models import User, Post, db
+from models import User, Post, Tag, PostTag, db
 from app import app
 from datetime import datetime, timezone
 
@@ -42,4 +42,46 @@ db.session.add(declaration)
 db.session.add(liberty)
 
 # Commit posts
+db.session.commit()
+
+# Add tags
+literature = Tag(name='literature')
+stoicism = Tag(name='stoicism')
+politics = Tag(name='politics')
+government = Tag(name='government')
+greece = Tag(name='greece')
+ancient = Tag(name='ancient')
+communism = Tag(name='communism')
+homer = Tag(name='homer')
+
+# Add tag objects to session
+db.session.add(literature)
+db.session.add(stoicism)
+db.session.add(politics)
+db.session.add(government)
+db.session.add(greece)
+db.session.add(ancient)
+db.session.add(communism)
+db.session.add(homer)
+
+# Commit tags
+db.session.commit()
+
+# Add PostTag relationships
+gulag.tags.append(literature)
+gulag.tags.append(communism)
+cancer_ward.tags.append(literature)
+stoic.tags.append(stoicism)
+stoic.tags.append(greece)
+stoic.tags.append(ancient)
+stoic.tags.append(homer)
+prettyboy_paris.tags.append(greece)
+prettyboy_paris.tags.append(ancient)
+prettyboy_paris.tags.append(homer)
+declaration.tags.append(politics)
+declaration.tags.append(government)
+liberty.tags.append(politics)
+liberty.tags.append(government)
+
+# Commit PostTag relationships
 db.session.commit()

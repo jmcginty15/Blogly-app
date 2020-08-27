@@ -82,3 +82,26 @@ class Post(db.Model):
             hour -= 12
 
         return f'{month} {day}, {year}, {hour}:{minute} {am_pm}'
+
+class Tag(db.Model):
+    """Tag"""
+
+    __tablename__ = 'Tags'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(20), nullable=False, unique=True)
+    posts = db.relationship('Post', secondary='Post_Tags', backref='tags')
+
+    def __repr__(self):
+        return f'<Tag id: {self.id}, name: {self.name}>'
+
+class PostTag(db.Model):
+    """Post Tag"""
+
+    __tablename__ = 'Post_Tags'
+
+    post_id = db.Column(db.Integer, db.ForeignKey('Posts.id'), primary_key=True)
+    tag_id = db.Column(db.Integer, db.ForeignKey('Tags.id'), primary_key=True)
+
+    def __repr__(self):
+        return f'<Post Tag post_id: {self.post_id}, tag_id: {self.tag_id}>'
