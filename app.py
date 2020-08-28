@@ -97,7 +97,8 @@ def edit_post_form(post_id):
     """Displays a form to edit a post"""
     post = Post.query.get(post_id)
     user = post.poster
-    return render_template('post-form.html', new=False, post=post, user=user)
+    tags = Tag.query.all()
+    return render_template('post-form.html', new=False, post=post, user=user, tags=tags)
 
 @app.route('/posts/<int:post_id>/edit', methods=['POST'])
 def process_post_edit(post_id):
@@ -107,6 +108,14 @@ def process_post_edit(post_id):
     post.title = form_input['title']
     post.content = form_input['content']
     post.updated_at = datetime.now(timezone.utc)
+    tags = Tag.query.all()
+    for tag in tags:
+        try:
+            post.tags.remove(tag)
+        except:
+            pass
+        if form_input.get(tag.name):
+            post.tags.append(tag)
     db.session.commit()
     flash(f'{post.title} updated!')
     return redirect(f'/posts/{post.id}')
@@ -129,7 +138,8 @@ def delete_post(post_id, page):
 def add_post(user_id):
     """Displays form for adding a new post"""
     user = User.query.get(user_id)
-    return render_template('post-form.html', new=True, post=None, user=user)
+    tags = Tag.query.all()
+    return render_template('post-form.html', new=True, post=None, user=user, tags=tags)
 
 @app.route('/users/<int:user_id>/posts/new', methods=['POST'])
 def process_new_post(user_id):
@@ -137,6 +147,10 @@ def process_new_post(user_id):
     form_input = request.form
     user = User.query.get(user_id)
     new_post = Post(title=form_input['title'], content=form_input['content'], created_at=datetime.now(timezone.utc), updated_at=datetime.now(timezone.utc), poster_id=user_id)
+    tags = Tag.query.all()
+    for tag in tags:
+        if form_input.get(tag.name):
+            new_post.tags.append(tag)
     db.session.add(new_post)
     db.session.commit()
     flash(f'{new_post.title} added!')
