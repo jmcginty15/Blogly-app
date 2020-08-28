@@ -173,13 +173,19 @@ def tag(tag_id):
 @app.route('/tags/new')
 def add_tag():
     """Displays form to add a new tag"""
-    return render_template('tag-form.html', new=True, tag=None)
+    posts = Post.query.all()
+    return render_template('tag-form.html', new=True, tag=None, posts=posts)
 
 @app.route('/tags/new', methods=['POST'])
 def process_new_tag():
     """Processes form input for new tag"""
-    tag_name = request.form['name']
+    form_input = request.form
+    tag_name = form_input['name']
     new_tag = Tag(name=tag_name)
+    posts = Post.query.all()
+    for post in posts:
+        if form_input.get(post.title):
+            new_tag.posts.append(post)
     db.session.add(new_tag)
     db.session.commit()
     flash_msg = Markup(f'<span class="badge badge-primary">{tag_name}</span> added!')
@@ -201,14 +207,24 @@ def delete_tag(tag_id):
 def edit_tag(tag_id):
     """Displays a form for editing a tag name"""
     tag = Tag.query.get(tag_id)
-    return render_template('tag-form.html', new=False, tag=tag)
+    posts = Post.query.all()
+    return render_template('tag-form.html', new=False, tag=tag, posts=posts)
 
 @app.route('/tags/<int:tag_id>/edit', methods=['POST'])
 def process_tag_edit(tag_id):
     """Process form input for editing a tag name"""
-    tag_name = request.form['name']
+    form_input = request.form
+    tag_name = form_input['name']
     tag = Tag.query.get(tag_id)
     tag.name = tag_name
+    posts = Post.query.all()
+    for post in posts:
+        try:
+            tag.posts.remove(post)
+        except:
+            pass
+        if form_input.get(post.title):
+            tag.posts.append(post)
     db.session.commit()
     flash_msg = Markup(f'<span class="badge badge-primary">{tag_name}</span> updated!')
     flash(flash_msg)

@@ -20,6 +20,13 @@ Edit {{ tag.name }}
                 <label for="name">Name</label>
                 <input class="form-control" name="name" placeholder="Enter a tag name" required>
             </div>
+            <div class="form-group">
+                <b>Add to posts:</b><br>
+                {% for post in posts %}
+                <input type="checkbox" name="{{ post.title }}">
+                <label for="{{ post.title }}">{{ post.title }}</label><br>
+                {% endfor %}
+            </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
         <form action="/tags" id="cancel-button">
@@ -32,8 +39,14 @@ Edit {{ tag.name }}
         <form action="/tags/{{ tag.id }}/edit" method="POST">
             <div class="form-group">
                 <label for="name">Name</label>
-                <input class="form-control" name="name" placeholder="Enter a tag name"
-                    value="{{ tag.name }}" required>
+                <input class="form-control" name="name" placeholder="Enter a tag name" value="{{ tag.name }}" required>
+            </div>
+            <div class="form-group">
+                <b>Add to posts:</b><br>
+                {% for post in posts %}
+                <input type="checkbox" name="{{ post.title }}" {% if post in tag.posts %}checked{% endif %}>
+                <label for="{{ post.title }}">{{ post.title }}</label><br>
+                {% endfor %}
             </div>
             <button type="submit" class="btn btn-primary">Save</button>
         </form>
